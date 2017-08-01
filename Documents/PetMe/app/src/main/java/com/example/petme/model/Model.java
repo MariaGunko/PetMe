@@ -9,10 +9,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.webkit.URLUtil;
 
-import com.example.petme.MainActivity;
 import com.example.petme.MyApplication;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,14 +34,13 @@ public class Model {
     private List<User> data = new LinkedList<User>();
 
     private Model(){
-
         modelMem = new ModelMem();
         modelSql = new ModelSql(MyApplication.context);
         modelFirebase = new ModelFirebase();
 
-//        for (int i=0;i<4;i++){
+//        for (int i=0;i<10;i++){
 //            User pet = new User();
-//            pet.setID(SetDynamicID());
+//            pet.setID(i+"");
 //            pet.setPetName("Michael");;
 //            pet.setPetType("Exotic");
 //            pet.setPetAge(3);
@@ -52,26 +48,20 @@ public class Model {
 //            pet.setUserAddress("Ashdod");
 //            pet.setUserPhone("0526682600");
 //            pet.setUserMail("masha.gonko@gmail.com");
-//            pet.setPassword("1234");
-//            data.add(pet);
-//            addUser(pet);
+//            modelFirebase.addUser(pet);
 //        }
     }
 
-    public String SetDynamicID (){
-        return data.size()+1+"";
-    }
-
-    interface GetAllUsersCallback{
+    public interface GetAllUsersAndObserveCallback{
         void onComplete(List <User> list);
         void onCancel ();
     }
 
-//    public List<User> getAllUsers(){
-//        return data;
-//    }
+    public List<User> getAllUsers (){
+        return modelSql.getAllUsers();
+    }
 
-        public void getAllUsers(final ModelFirebase.GetAllUsersAndObserveCallback callback){
+    public void getAllUsers(final GetAllUsersAndObserveCallback callback){
         modelFirebase.getAllUsersAndObserve(new ModelFirebase.GetAllUsersAndObserveCallback() {
             @Override
             public void onComplete(List<User> list) {
@@ -86,12 +76,16 @@ public class Model {
         });
     }
 
-    public void addUser (User pet){
-        modelFirebase.addUser(pet);
-        //data.add(pet);
+    public void addToSQL (User pet){
+        modelSql.addUser(pet);
     }
 
-    public void countUsers(final ModelFirebase.GetUsersCountCallback callback){
+    public void addUser (User pet){
+        modelFirebase.addUser(pet);
+        //modelSql.addUser(pet);
+    }
+
+    public void countUsers(final GetUsersCountCallback callback){
        modelFirebase.getCountOfUsers(new ModelFirebase.GetUsersCountCallback(){
            @Override
            public void onComplete(long count) {
@@ -104,13 +98,13 @@ public class Model {
        });
     }
 
-    interface GetUsersCountCallback{
+    public interface GetUsersCountCallback{
         void onComplete(long count);
         void onCancel ();
     }
 
-    public void deleteUser (User pet){
-        data.remove(pet);
+    public void deleteUser (String id){
+        modelSql.RemoveUser(id);
     }
 
     public interface GetUserCallback{
@@ -118,9 +112,12 @@ public class Model {
         void onCancel ();
     }
 
+    public User getUser (String petId){
+        return modelSql.getUser(petId);
+    }
+
     public void getUser(String petID, final GetUserCallback callback) {
         modelFirebase.getUser(petID, new ModelFirebase.GetUserCallback(){
-
             @Override
             public void onComplete(User pet) {
                 callback.onComplete(pet);
@@ -131,24 +128,25 @@ public class Model {
                 callback.onCancel();
             }
         });
-//        for (User pet : data){
-//            if (pet.getID().equals(petID)){
-//                return pet;
-//            }
-//        }
-//        return null;
+
     }
 
-    public void UpdateUser (User pet, User petNew ){
-        pet.setPetName(petNew.getPetName());;
-        pet.setPetType(petNew.getPetType());
-        pet.setPetAge(petNew.getPetAge());
-        pet.setUserName(petNew.getUserName());
-        pet.setUserAddress(petNew.getUserAddress());
-        pet.setUserPhone(petNew.getUserPhone());
-        pet.setUserMail(petNew.getUserMail());
-        pet.setImageUserUrl(petNew.getImageUserUrl());
-        addUser(pet);
+    public void UpdateUser(User pet){
+        modelSql.updateUser(pet);
+    }
+
+    public void UpdateUser (User pet, String namePet, String type, int age, String name, String phone ,String mail, String add, String imageUser, String imagePet ){
+        pet.setPetName(namePet);;
+        pet.setPetType(type);
+        pet.setPetAge(age);
+        pet.setUserName(name);
+        pet.setUserAddress(add);
+        pet.setUserPhone(phone);
+        pet.setUserMail(mail);
+        pet.setImageUserUrl(imageUser);
+        pet.setImagePetUrl(imagePet);
+        modelFirebase.addUser(pet);
+        modelSql.updateUser(pet);
     }
 
     public void RemoveUser (User pet){

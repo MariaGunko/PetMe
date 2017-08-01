@@ -3,9 +3,9 @@ package com.example.petme.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -65,6 +65,7 @@ public class ModelSql {
         values.put (PET_IMAGE, pet.getImagePetUrl());
         values.put (USER_IMAGE, pet.getImageUserUrl());
 
+        Log.d("TAG","Added user " +pet.getID());
         db.insert(PET_TABLE, PET_ID, values);
     }
 
@@ -102,8 +103,47 @@ public class ModelSql {
         return list;
     }
 
+    public void updateUser (User pet){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put (PET_NAME, pet.getPetName());
+        values.put (PET_TYPE, pet.getPetType());
+        values.put (PET_AGE, pet.getPetAge());
+        values.put (USER_NAME, pet.getUserName());
+        values.put (USER_ADDRESS, pet.getUserAddress());
+        values.put (USER_MAIL, pet.getUserMail());
+        values.put (USER_PHONE, pet.getUserPhone());
+        values.put (PET_IMAGE, pet.getImagePetUrl());
+        values.put (USER_IMAGE, pet.getImageUserUrl());
+
+        Log.d("TAG","Added user " +pet.getID());
+        db.update(PET_TABLE, values, PET_ID+"="+pet.getID(), null);
+    }
+
     public User getUser(String userId){
-        User pet = new User ();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + PET_TABLE + " WHERE "+PET_ID+" = "+userId+";",null);
+        cursor.moveToFirst();
+
+        User pet = new User();
+        pet.setID(cursor.getString(cursor.getColumnIndex(PET_ID)));
+        pet.setPetName(cursor.getString(cursor.getColumnIndex(PET_NAME)));
+        pet.setPetType(cursor.getString(cursor.getColumnIndex(PET_TYPE)));
+        pet.setPetAge(cursor.getInt(cursor.getColumnIndex(PET_AGE)));
+        pet.setUserName(cursor.getString(cursor.getColumnIndex(USER_NAME)));
+        pet.setUserAddress(cursor.getString(cursor.getColumnIndex(USER_ADDRESS)));
+        pet.setUserPhone(cursor.getString(cursor.getColumnIndex(USER_PHONE)));
+        pet.setUserMail(cursor.getString(cursor.getColumnIndex(USER_MAIL)));
+        pet.setImagePetUrl(cursor.getString(cursor.getColumnIndex(PET_IMAGE)));
+        pet.setImageUserUrl(cursor.getString(cursor.getColumnIndex(USER_IMAGE)));
+
         return pet;
+    }
+
+    public void RemoveUser(String userId){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + PET_TABLE + " WHERE " + PET_ID + "= '" + userId + "'");
+        Log.d("TAG","Removed user " + userId);
     }
 }

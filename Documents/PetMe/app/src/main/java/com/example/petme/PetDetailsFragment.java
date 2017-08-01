@@ -17,10 +17,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.petme.model.Model;
-import com.example.petme.model.ModelFirebase;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.BATTERY_SERVICE;
 
 
 /**
@@ -45,7 +43,7 @@ public class PetDetailsFragment extends Fragment {
 
         final String currentUserMail = Model.instance.GetMailOfCurrentUser();
 
-        Model.instance.countUsers(new ModelFirebase.GetUsersCountCallback(){
+        Model.instance.countUsers(new Model.GetUsersCountCallback(){
             @Override
             public void onComplete(long count) {
                 usersCounter = count;

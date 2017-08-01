@@ -62,10 +62,10 @@ public class UserPageFragment extends Fragment {
         setHasOptionsMenu(true);
         final View contentView = inflater.inflate(R.layout.fragment_user_page, container, false);
 
-
-        Model.instance.getUser(itemId, new Model.GetUserCallback(){
-            @Override
-            public void onComplete(User pet) {
+        User pet = Model.instance.getUser(itemId);
+//        Model.instance.getUser(itemId, new Model.GetUserCallback(){
+//            @Override
+//            public void onComplete(User pet) {
 
                 UserPageFragment.this.pet = pet;
                 Log.d("TAG", "get pet name" + pet.getPetName());
@@ -119,13 +119,13 @@ public class UserPageFragment extends Fragment {
                         public void onFail() {}
                     });
                 }
-            }
+//            }
 
-            @Override
-            public void onCancel() {
-                Log.d("TAG", "get pet cancel");
-            }
-        });
+//            @Override
+//            public void onCancel() {
+//                Log.d("TAG", "get pet cancel");
+//            }
+//        });
 
         return contentView;
     }

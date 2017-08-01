@@ -26,7 +26,6 @@ public class LogInFragment extends Fragment {
                 Fragment detailsFragment = new PetDetailsFragment ();
                 FragmentTransaction tran = getFragmentManager().beginTransaction();
                 tran.replace(R.id.main_container, detailsFragment);
-                //tran.addToBackStack("");
                 tran.commit();
             }
         });

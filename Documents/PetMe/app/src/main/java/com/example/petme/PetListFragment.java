@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.petme.model.Model;
-import com.example.petme.model.ModelFirebase;
 import com.example.petme.model.User;
 
 import java.util.LinkedList;
@@ -72,6 +71,7 @@ public class PetListFragment extends Fragment {
         loadingList.setVisibility(View.GONE);
         adapter = new UserListAdapter();
 
+
         list = (ListView) contentView.findViewById(R.id.pet_list);
         list.setAdapter(adapter);
 
@@ -86,18 +86,31 @@ public class PetListFragment extends Fragment {
 
         loadingList.setVisibility(View.VISIBLE);
         //data = Model.instance.getAllUsers();
-        Model.instance.getAllUsers(new ModelFirebase.GetAllUsersAndObserveCallback(){
-            @Override
-            public void onComplete(List<User> petsList) {
-                data = petsList;
-                adapter.notifyDataSetChanged();
-                loadingList.setVisibility(View.GONE);
-                addBtn.setVisibility (View.VISIBLE);
-            }
+        //if (data==null){
+            Model.instance.getAllUsers(new Model.GetAllUsersAndObserveCallback(){
+                @Override
+                public void onComplete(List<User> petsList) {
+                    data = petsList;
+//                    for (int j=0;j<data.size();j++)
+//                        Model.instance.deleteUser(String.valueOf(j));
+                    for (int i=0;i<data.size();i++)
+                        Model.instance.addToSQL(data.get(i));
+                    adapter.notifyDataSetChanged();
+                    loadingList.setVisibility(View.GONE);
+                    addBtn.setVisibility (View.VISIBLE);
+                }
 
-            @Override
-            public void onCancel() { }
-        });
+                @Override
+                public void onCancel() { }
+            });
+//        }
+//        else
+//        {
+//            adapter.notifyDataSetChanged();
+//            loadingList.setVisibility(View.GONE);
+//            addBtn.setVisibility (View.VISIBLE);
+//        }
+
 
         boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==

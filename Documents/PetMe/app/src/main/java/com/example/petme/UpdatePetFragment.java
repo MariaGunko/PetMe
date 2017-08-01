@@ -27,7 +27,6 @@ import static android.app.Activity.RESULT_OK;
  */
 public class UpdatePetFragment extends Fragment {
 
-    long usersCounter;
     int whichPhoto; // index of image pressed
 
     ImageView userImageView;
@@ -42,6 +41,8 @@ public class UpdatePetFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "itemId";
     private String itemId;
+
+    User pet;
 
 
     public UpdatePetFragment() {
@@ -85,58 +86,109 @@ public class UpdatePetFragment extends Fragment {
 
 
         savingProfile.setVisibility(View.VISIBLE);
-        Model.instance.getUser(itemId, new Model.GetUserCallback(){
-            @Override
-            public void onComplete(User pet) {
+        pet = Model.instance.getUser(itemId);
 
-                petName.setText(pet.getPetName());
-                petType.setText(pet.getPetType());
-                petAge.setText(pet.getPetAge()+"");
-                ownerName.setText(pet.getUserName());
-                ownerAddress.setText(pet.getUserAddress());
-                ownerPhone.setText(pet.getUserPhone());
+        if (pet==null){
+            Model.instance.getUser(itemId, new Model.GetUserCallback(){
+                @Override
+                public void onComplete(User previousPet) {
+                    pet=previousPet;
+                    Log.d("TAG", "Taken from Firebase");
+                    petName.setText(pet.getPetName());
+                    petType.setText(pet.getPetType());
+                    petAge.setText(pet.getPetAge() + "");
+                    ownerName.setText(pet.getUserName());
+                    ownerAddress.setText(pet.getUserAddress());
+                    ownerPhone.setText(pet.getUserPhone());
 
-                ImageForPet = pet.getImagePetUrl();
-                ImageForUser = pet.getImageUserUrl();
+                    ImageForPet = pet.getImagePetUrl();
+                    ImageForUser = pet.getImageUserUrl();
 
-                savingProfile.setVisibility(View.GONE);
-                if (pet.getImageUserUrl()!=null && pet.getImageUserUrl().isEmpty()==false) {
-                    Model.instance.getImage(pet.getImageUserUrl(), new Model.GetImageListener() {
-                        @Override
-                        public void onSuccess(Bitmap image) {
-                            userPic.setImageBitmap(image);
-                            savingProfile.setVisibility(View.GONE);
-                        }
+                    savingProfile.setVisibility(View.GONE);
+                    if (pet.getImageUserUrl() != null && pet.getImageUserUrl().isEmpty() == false) {
+                        Model.instance.getImage(pet.getImageUserUrl(), new Model.GetImageListener() {
+                            @Override
+                            public void onSuccess(Bitmap image) {
+                                userPic.setImageBitmap(image);
+                                savingProfile.setVisibility(View.GONE);
+                            }
 
-                        @Override
-                        public void onFail() {
+                            @Override
+                            public void onFail() {
 
-                        }
-                    });
+                            }
+                        });
+                    }
+
+                    if (pet.getImagePetUrl() != null && pet.getImagePetUrl().isEmpty() == false) {
+
+                        Model.instance.getImage(pet.getImagePetUrl(), new Model.GetImageListener() {
+                            @Override
+                            public void onSuccess(Bitmap image) {
+                                petPic.setImageBitmap(image);
+                                savingProfile.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onFail() {
+
+                            }
+                        });
+                    }
                 }
 
-                if (pet.getImagePetUrl()!=null && pet.getImagePetUrl().isEmpty()==false) {
-
-                    Model.instance.getImage(pet.getImagePetUrl(), new Model.GetImageListener() {
-                        @Override
-                        public void onSuccess(Bitmap image) {
-                            petPic.setImageBitmap(image);
-                            savingProfile.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFail() {
-
-                        }
-                    });
+                @Override
+                public void onCancel() {
+                    Log.d("TAG", "get pet cancel");
                 }
+            });
+        }
+        else {
+
+            Log.d("TAG", "Taken from SQLITE");
+
+            petName.setText(pet.getPetName());
+            petType.setText(pet.getPetType());
+            petAge.setText(pet.getPetAge() + "");
+            ownerName.setText(pet.getUserName());
+            ownerAddress.setText(pet.getUserAddress());
+            ownerPhone.setText(pet.getUserPhone());
+
+            ImageForPet = pet.getImagePetUrl();
+            ImageForUser = pet.getImageUserUrl();
+
+            savingProfile.setVisibility(View.GONE);
+            if (pet.getImageUserUrl() != null && pet.getImageUserUrl().isEmpty() == false) {
+                Model.instance.getImage(pet.getImageUserUrl(), new Model.GetImageListener() {
+                    @Override
+                    public void onSuccess(Bitmap image) {
+                        userPic.setImageBitmap(image);
+                        savingProfile.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFail() {
+
+                    }
+                });
             }
 
-            @Override
-            public void onCancel() {
-                Log.d("TAG", "get pet cancel");
+            if (pet.getImagePetUrl() != null && pet.getImagePetUrl().isEmpty() == false) {
+
+                Model.instance.getImage(pet.getImagePetUrl(), new Model.GetImageListener() {
+                    @Override
+                    public void onSuccess(Bitmap image) {
+                        petPic.setImageBitmap(image);
+                        savingProfile.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFail() {
+
+                    }
+                });
             }
-        });
+        }
 
         Button cancelBtn = (Button) contentView.findViewById(R.id.update_CancelBtn);
         cancelBtn.setOnClickListener(new View.OnClickListener(){
@@ -196,7 +248,7 @@ public class UpdatePetFragment extends Fragment {
                                         @Override
                                         public void complete(String urlPet) {
                                             Log.d("TAG", "Pet image saved");
-                                            updateUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, urlPet);
+                                            updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, urlPet);
                                         }
 
                                         @Override
@@ -206,7 +258,7 @@ public class UpdatePetFragment extends Fragment {
                                     });
                                 }
                                 else{
-                                    updateUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, ImageForPet);
+                                    updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, ImageForPet);
                                 }
                             }
                             @Override
@@ -222,7 +274,7 @@ public class UpdatePetFragment extends Fragment {
                                 @Override
                                 public void complete(String urlPet) {
                                     Log.d("TAG", "Pet image saved");
-                                    updateUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, urlPet);
+                                    updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, urlPet);
                                 }
 
                                 @Override
@@ -232,7 +284,7 @@ public class UpdatePetFragment extends Fragment {
                             });
                         }
                         else {
-                            updateUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, ImageForPet);
+                            updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, ImageForPet);
                         }
                     }
                 }
@@ -256,11 +308,10 @@ public class UpdatePetFragment extends Fragment {
         });
 
         return contentView;
-        //return inflater.inflate(R.layout.fragment_pet_details, container, false);
     }
 
-    private void updateUser (String petName, String petType, int petAge, String ownerName, String ownerPhone, String userMail, String ownerAddress, String urlOwner, String urlPet){
-        Model.instance.CreateUser(usersCounter, petName, petType, petAge, ownerName, ownerPhone, userMail, ownerAddress, urlOwner, urlPet);
+    private void updateUser (User pet, String petName, String petType, int petAge, String ownerName, String ownerPhone, String userMail, String ownerAddress, String urlOwner, String urlPet){
+        Model.instance.UpdateUser(pet, petName, petType, petAge, ownerName, ownerPhone, userMail, ownerAddress, urlOwner, urlPet);
         PetListFragment petList = PetListFragment.newInstance();
         FragmentTransaction tran = getFragmentManager().beginTransaction();
         tran.replace(R.id.main_container, petList);
