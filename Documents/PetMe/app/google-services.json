@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "837650492565",
+    "firebase_url": "https://petme-62eb8.firebaseio.com",
+    "project_id": "petme-62eb8",
+    "storage_bucket": "petme-62eb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837650492565:android:f97e7429890dd55f",
+        "android_client_info": {
+          "package_name": "com.example.petme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837650492565-kt0vasvpg8hmfsmkvbbfc2a0bg00jp29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAznxPiSsEuTXZcxxSLFAv8PruEVe3ZAsM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
