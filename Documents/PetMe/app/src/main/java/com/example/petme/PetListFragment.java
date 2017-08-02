@@ -1,9 +1,11 @@
 package com.example.petme;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,6 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -63,6 +68,7 @@ public class PetListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         //Model.instance.getCurrentlyConnectedUser();
         // Inflate the layout for this fragment
         View contentView = inflater.inflate(R.layout.fragment_pet_list, container, false);
@@ -156,8 +162,20 @@ public class PetListFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_logout:
+                mListener.onLogOut();
+                break;
+        }
+        return true;
+    }
+
+
     public interface OnFragmentInteractionListener {
         void onItemSelected(String itemId);
+        void onLogOut();
     }
 
     class UserListAdapter extends BaseAdapter {
@@ -216,5 +234,11 @@ public class PetListFragment extends Fragment {
             userName.setText(pet.getUserName());
             return convertView;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_logout, menu);
     }
 }

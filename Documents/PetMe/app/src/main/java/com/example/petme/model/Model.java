@@ -38,18 +38,20 @@ public class Model {
         modelSql = new ModelSql(MyApplication.context);
         modelFirebase = new ModelFirebase();
 
-//        for (int i=0;i<10;i++){
-//            User pet = new User();
-//            pet.setID(i+"");
-//            pet.setPetName("Michael");;
-//            pet.setPetType("Exotic");
-//            pet.setPetAge(3);
-//            pet.setUserName("Maria");
-//            pet.setUserAddress("Ashdod");
-//            pet.setUserPhone("0526682600");
-//            pet.setUserMail("masha.gonko@gmail.com");
-//            modelFirebase.addUser(pet);
-//        }
+        //initData();
+    }
+
+    public void initData(){
+        CreateUser (0, "Michael", "Exotic",3, "Maria", "0526682600" ,"masha.gonko@gmail.com", "Ashdod", null, null );
+        CreateUser (1, "Hosico", "Scottish",2, "Ella", "0523345698" ,"gutman@gmail.com", "Rishon Lezion", null, null );
+        CreateUser (2, "White Cofee Cat", "British ShortHair",3, "Robert", "046789345" ,"mr.cofee@gmail.com", "Beer Sheva", null, null );
+        CreateUser (3, "Mr. Donuts", "British ShortHair",1, "Ira", "036579008" ,"irina.zel@walla.com", "Ashdod", null, null );
+        CreateUser (4, "Ugi", "Pomeranian",2, "Angelina", "0546678911" ,"shor@gmail.com", "Tel Aviv", null, null );
+        CreateUser (5, "Shon", "Siberian Husky",1, "Moran", "088659802" ,"moran.bar@walla.com", "Rishon Lezion", null, null );
+        CreateUser (6, "Lika", "Labrador Retriever",2, "Sergey", "0526093318" ,"serkeyka124@mail.ru", "Ashdod", null, null );
+        CreateUser (7, "Snow", "Labrador Retriever",2, "Sergey", "0526093318" ,"serkeyka124@mail.ru", "Ashdod", null, null );
+        CreateUser (8, "Joy", "Pomeranian",1, "Shelly", "0504456432" ,"Shelly.gonko@gmail.com", "Holon", null, null );
+        CreateUser (9, "Bully", "Bulldog",2, "Shelly", "0504456432" ,"Shelly.gonko@gmail.com", "Holon", null, null );
     }
 
     public interface GetAllUsersAndObserveCallback{

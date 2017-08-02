@@ -3,6 +3,7 @@ package com.example.petme;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -51,6 +52,14 @@ public class MainActivity extends Activity implements PetListFragment.OnFragment
         tran.replace(R.id.main_container, userPageFragment);
         tran.addToBackStack("");
         tran.commit();
+    }
+
+    @Override
+    public void onLogOut() {
+        Log.d("TAG","User Logged Out");
+        this.finish();
+        Intent intent = new Intent(this, EmailPasswordActivity.class);
+        startActivity(intent);
     }
 
     @Override
