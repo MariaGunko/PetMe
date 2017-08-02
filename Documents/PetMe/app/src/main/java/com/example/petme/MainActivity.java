@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -13,10 +14,16 @@ import com.example.petme.model.User;
 
 public class MainActivity extends Activity implements PetListFragment.OnFragmentInteractionListener, UserPageFragment.OnFragmentInteractionListener {
 
+    public SharedPreferences pref;
+    public SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = pref.edit();
 
         new CountDownTimer(2000, 1000) {
 
@@ -57,6 +64,9 @@ public class MainActivity extends Activity implements PetListFragment.OnFragment
     @Override
     public void onLogOut() {
         Log.d("TAG","User Logged Out");
+        editor.putString("mail", "null");
+        editor.putString("pws", "null");
+        editor.commit();
         this.finish();
         Intent intent = new Intent(this, EmailPasswordActivity.class);
         startActivity(intent);

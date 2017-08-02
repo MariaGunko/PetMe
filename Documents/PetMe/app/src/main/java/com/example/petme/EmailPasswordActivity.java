@@ -2,6 +2,7 @@ package com.example.petme;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -23,11 +24,17 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
     private EditText mailEdit;
     private EditText pwdEdit;
 
+    public SharedPreferences pref;
+    public SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_password);
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor = pref.edit();
 
         // Views
         mailEdit = (EditText) findViewById(R.id.create_mail);
@@ -40,13 +47,18 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
-        Log.d("TAG", "User is signed in");
-        //FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
+        Log.d("TAG", pref.getString("mail", null));
+        Log.d("TAG", pref.getString("pws", null));
+        if ((!pref.getString("mail", null).equals("null"))&&(!pref.getString("pws", null).equals("null"))){
+            FirebaseUser user = mAuth.getCurrentUser();
+            Log.d("TAG", "User is signed in");
+            updateUI(user);
+        }
     }
 
-    private void createAccount (String email, String password){
+    private void createAccount (final String email, final String password){
     mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
         @Override
@@ -55,6 +67,9 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "createUserWithEmail:success");
                 FirebaseUser user = mAuth.getCurrentUser();
+                editor.putString("mail", email);
+                editor.putString("pws", password);
+                editor.commit();
                 Toast.makeText(EmailPasswordActivity.this, "Registration Success",
                         Toast.LENGTH_SHORT).show();
                 updateUINewUser(user);
@@ -70,7 +85,7 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
             });
     }
 
-    private void signIn(String email, String password) {
+    private void signIn(final String email, final String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -79,6 +94,11 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            editor.putString("mail", email);
+                            editor.putString("pws", password);
+                            Log.d("TAG", pref.getString("mail", null));
+                            Log.d("TAG", pref.getString("pws", null));
+                            editor.commit();
                             Toast.makeText(EmailPasswordActivity.this, "Login Success",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(user);
@@ -93,10 +113,6 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
     }
 
 
-
-//        Intent intent = new Intent(EmailPasswordActivity.this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
     private void updateUI(Object o) {
         Intent intent = new Intent(EmailPasswordActivity.this, MainActivity.class);
         Bundle b = new Bundle();
@@ -128,10 +144,6 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                     signIn(mailEdit.getText().toString(), pwdEdit.getText().toString());
             }
         }
-//         else if (i == R.id.sign_out_button) {
-//            signOut();
-//        }
-
     }
 
     private boolean checkFields (String m, String p){
