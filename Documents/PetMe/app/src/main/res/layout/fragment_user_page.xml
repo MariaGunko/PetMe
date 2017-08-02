@@ -49,18 +49,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp">
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/petImage_view"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@mipmap/ic_launcher_round" />
 
+        <ProgressBar
+            android:id="@+id/petImage_progress_bar"
+            android:visibility="gone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/type_view"
@@ -144,13 +157,26 @@
 
             </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
             <ImageView
                 android:id="@+id/ownerImage_view"
-                android:layout_width="fill_parent"
-                android:layout_height="200dp"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:src="@mipmap/ic_launcher_round" />
+
+
+            <ProgressBar
+                android:id="@+id/userImage_progress_bar"
+                android:visibility="gone"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+            </FrameLayout>
 
         </LinearLayout>
 

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.petme.model.Model;
@@ -61,6 +62,10 @@ public class UserPageFragment extends Fragment {
         //return inflater.inflate(R.layout.fragment_user_page, container, false);
         setHasOptionsMenu(true);
         final View contentView = inflater.inflate(R.layout.fragment_user_page, container, false);
+        final ProgressBar petBar = (ProgressBar) contentView.findViewById(R.id.petImage_progress_bar);
+        final ProgressBar userBar = (ProgressBar) contentView.findViewById(R.id.userImage_progress_bar);
+        petBar.setVisibility(View.GONE);
+        userBar.setVisibility(View.GONE);
 
         User pet = Model.instance.getUser(itemId);
 //        Model.instance.getUser(itemId, new Model.GetUserCallback(){
@@ -97,10 +102,12 @@ public class UserPageFragment extends Fragment {
 
                 if (pet.getImageUserUrl()!=null && pet.getImageUserUrl().isEmpty()==false) {
 
+                    userBar.setVisibility(View.VISIBLE);
                     Model.instance.getImage(pet.getImageUserUrl(), new Model.GetImageListener() {
                         @Override
                         public void onSuccess(Bitmap image) {
                             userPic.setImageBitmap(image);
+                            userBar.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -112,10 +119,12 @@ public class UserPageFragment extends Fragment {
 
                 if (pet.getImagePetUrl()!=null && pet.getImagePetUrl().isEmpty()==false) {
 
+                    petBar.setVisibility(View.VISIBLE);
                     Model.instance.getImage(pet.getImagePetUrl(), new Model.GetImageListener() {
                         @Override
                         public void onSuccess(Bitmap image) {
                             petPic.setImageBitmap(image);
+                            petBar.setVisibility(View.GONE);
                         }
 
                         @Override

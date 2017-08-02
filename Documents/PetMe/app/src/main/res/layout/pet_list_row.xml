@@ -27,7 +27,8 @@
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:id="@+id/pet_row_name"
