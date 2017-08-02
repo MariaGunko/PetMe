@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class Model {
     private ModelSql modelSql;
 
     private List<User> data = new LinkedList<User>();
+    String [] FreeIDs = new String[50];
 
     private Model(){
         modelMem = new ModelMem();
@@ -42,16 +44,16 @@ public class Model {
     }
 
     public void initData(){
-        CreateUser (0, "Michael", "Exotic",3, "Maria", "0526682600" ,"masha.gonko@gmail.com", "Ashdod", null, null );
-        CreateUser (1, "Hosico", "Scottish",2, "Ella", "0523345698" ,"gutman@gmail.com", "Rishon Lezion", null, null );
-        CreateUser (2, "White Cofee Cat", "British ShortHair",3, "Robert", "046789345" ,"mr.cofee@gmail.com", "Beer Sheva", null, null );
-        CreateUser (3, "Mr. Donuts", "British ShortHair",1, "Ira", "036579008" ,"irina.zel@walla.com", "Ashdod", null, null );
-        CreateUser (4, "Ugi", "Pomeranian",2, "Angelina", "0546678911" ,"shor@gmail.com", "Tel Aviv", null, null );
-        CreateUser (5, "Shon", "Siberian Husky",1, "Moran", "088659802" ,"moran.bar@walla.com", "Rishon Lezion", null, null );
-        CreateUser (6, "Lika", "Labrador Retriever",2, "Sergey", "0526093318" ,"serkeyka124@mail.ru", "Ashdod", null, null );
-        CreateUser (7, "Snow", "Labrador Retriever",2, "Sergey", "0526093318" ,"serkeyka124@mail.ru", "Ashdod", null, null );
-        CreateUser (8, "Joy", "Pomeranian",1, "Shelly", "0504456432" ,"Shelly.gonko@gmail.com", "Holon", null, null );
-        CreateUser (9, "Bully", "Bulldog",2, "Shelly", "0504456432" ,"Shelly.gonko@gmail.com", "Holon", null, null );
+        CreateUser (0, "Michael", "Exotic",3,"Perfect cat, very friendly looking for a warm home", "Maria", "0526682600" ,"masha.gonko@gmail.com", "Ashdod", null, null );
+        CreateUser (1, "Hosico", "Scottish",2,"", "Ella", "0523345698" ,"gutman@gmail.com", "Rishon Lezion", null, null );
+        CreateUser (2, "White Cofee Cat", "British ShortHair",3,"", "Robert", "046789345" ,"mr.cofee@gmail.com", "Beer Sheva", null, null );
+        CreateUser (3, "Mr. Donuts", "British ShortHair",1,"", "Maria", "036579008" ,"masha.gonko@gmail.com", "Ashdod", null, null );
+        CreateUser (4, "Ugi", "Pomeranian",2,"", "Angelina", "0546678911" ,"shor@gmail.com", "Tel Aviv", null, null );
+        CreateUser (5, "Shon", "Siberian Husky",1,"Beautiful dog, very well educated, likes children a lot", "Moran", "088659802" ,"moran.bar@walla.com", "Rishon Lezion", null, null );
+        CreateUser (6, "Lika", "Labrador Retriever",2,"Well trained", "Sergey", "0526093318" ,"sergeyka124@mail.com", "Ashdod", null, null );
+        CreateUser (7, "Snow", "Labrador Retriever",2,"Well trained", "Sergey", "0526093318" ,"sergeyka124@mail.com", "Ashdod", null, null );
+        CreateUser (8, "Joy", "Pomeranian",1,"Very good dog, happy and joyful", "Shelly", "0504456432" ,"shelly@gmail.com", "Holon", null, null );
+        CreateUser (9, "Bully", "Bulldog",2,"Great friend", "Shelly", "0504456432" ,"shelly@gmail.com", "Holon", null, null );
     }
 
     public interface GetAllUsersAndObserveCallback{
@@ -84,7 +86,7 @@ public class Model {
 
     public void addUser (User pet){
         modelFirebase.addUser(pet);
-        //modelSql.addUser(pet);
+        modelSql.addUser(pet);
     }
 
     public void countUsers(final GetUsersCountCallback callback){
@@ -137,10 +139,11 @@ public class Model {
         modelSql.updateUser(pet);
     }
 
-    public void UpdateUser (User pet, String namePet, String type, int age, String name, String phone ,String mail, String add, String imageUser, String imagePet ){
+    public void UpdateUser (User pet, String namePet, String type, int age, String info, String name, String phone ,String mail, String add, String imageUser, String imagePet ){
         pet.setPetName(namePet);;
         pet.setPetType(type);
         pet.setPetAge(age);
+        pet.setInfo(info);
         pet.setUserName(name);
         pet.setUserAddress(add);
         pet.setUserPhone(phone);
@@ -153,18 +156,29 @@ public class Model {
 
     public void RemoveUser (User pet){
         modelFirebase.DeleteUser(pet);
+        int index=0;
+            while (FreeIDs[index]!=null)
+                index++;
+        FreeIDs[index]=pet.getID();
+        Log.d("TAG", "Deleteed " + FreeIDs[index] + " now in index");
     }
 
     public String GetMailOfCurrentUser (){
         return modelFirebase.getUserMail();
     }
 
-    public void CreateUser (long prevId, String namePet, String type, int age, String name, String phone ,String mail, String add, String imageUser, String imagePet ){
+    public void CreateUser (long id, String namePet, String type, int age, String petInfo, String name, String phone ,String mail, String add, String imageUser, String imagePet ){
         User pet = new User();
-        pet.setID(prevId+1+"");
+//        String freeId = checkFirstIdAvailable();
+//        if (freeId==null)
+//            pet.setID(id + "");
+//        else
+//            pet.setID(freeId);
+        pet.setID(id + "");
         pet.setPetName(namePet);;
         pet.setPetType(type);
         pet.setPetAge(age);
+        pet.setInfo(petInfo);
         pet.setUserName(name);
         pet.setUserAddress(add);
         pet.setUserPhone(phone);
@@ -177,6 +191,21 @@ public class Model {
     public interface SaveImageListener {
         void complete (String url);
         void fail ();
+    }
+
+    public String checkFirstIdAvailable (){
+        int index=0;
+        String found;
+        while (FreeIDs[index]!=null){
+            index++;
+        }
+        if (index==0)
+            return null;
+        else {
+            found = FreeIDs[index - 1];
+            FreeIDs[index - 1] = null;
+            return found;
+        }
     }
 
     public void getCurrentlyConnectedUser(){

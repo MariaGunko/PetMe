@@ -78,6 +78,7 @@ public class UpdatePetFragment extends Fragment {
         final EditText petName = (EditText) contentView.findViewById(R.id.update_pet_name);
         final EditText petType = (EditText) contentView.findViewById(R.id.update_pet_type);
         final EditText petAge = (EditText) contentView.findViewById(R.id.update_pet_age);
+        final EditText petInfo = (EditText) contentView.findViewById(R.id.update_info);
         final EditText ownerName = (EditText) contentView.findViewById(R.id.update_owner_name);
         final EditText ownerPhone = (EditText) contentView.findViewById(R.id.update_owner_phone);
         final EditText ownerAddress = (EditText) contentView.findViewById(R.id.update_owner_address);
@@ -97,6 +98,7 @@ public class UpdatePetFragment extends Fragment {
                     petName.setText(pet.getPetName());
                     petType.setText(pet.getPetType());
                     petAge.setText(pet.getPetAge() + "");
+                    petInfo.setText(pet.getInfo());
                     ownerName.setText(pet.getUserName());
                     ownerAddress.setText(pet.getUserAddress());
                     ownerPhone.setText(pet.getUserPhone());
@@ -150,6 +152,7 @@ public class UpdatePetFragment extends Fragment {
             petName.setText(pet.getPetName());
             petType.setText(pet.getPetType());
             petAge.setText(pet.getPetAge() + "");
+            petInfo.setText(pet.getInfo());
             ownerName.setText(pet.getUserName());
             ownerAddress.setText(pet.getUserAddress());
             ownerPhone.setText(pet.getUserPhone());
@@ -236,6 +239,9 @@ public class UpdatePetFragment extends Fragment {
                 }
                 if (ownerPhone.getText().toString().trim().equals(""))
                     ownerPhone.setText(null);
+                if (petInfo.getText().toString().trim().equals(""))
+                    petInfo.setText(null);
+
                 if (error==false){
                     savingProfile.setVisibility(View.VISIBLE);
                     if (userImageBitmap!=null) {
@@ -248,7 +254,7 @@ public class UpdatePetFragment extends Fragment {
                                         @Override
                                         public void complete(String urlPet) {
                                             Log.d("TAG", "Pet image saved");
-                                            updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, urlPet);
+                                            updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, urlPet);
                                         }
 
                                         @Override
@@ -258,7 +264,7 @@ public class UpdatePetFragment extends Fragment {
                                     });
                                 }
                                 else{
-                                    updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, ImageForPet);
+                                    updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), urlOwner, ImageForPet);
                                 }
                             }
                             @Override
@@ -274,7 +280,7 @@ public class UpdatePetFragment extends Fragment {
                                 @Override
                                 public void complete(String urlPet) {
                                     Log.d("TAG", "Pet image saved");
-                                    updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, urlPet);
+                                    updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, urlPet);
                                 }
 
                                 @Override
@@ -284,7 +290,7 @@ public class UpdatePetFragment extends Fragment {
                             });
                         }
                         else {
-                            updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, ImageForPet);
+                            updateUser(pet, petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUser, ownerAddress.getText().toString(), ImageForUser, ImageForPet);
                         }
                     }
                 }
@@ -310,8 +316,8 @@ public class UpdatePetFragment extends Fragment {
         return contentView;
     }
 
-    private void updateUser (User pet, String petName, String petType, int petAge, String ownerName, String ownerPhone, String userMail, String ownerAddress, String urlOwner, String urlPet){
-        Model.instance.UpdateUser(pet, petName, petType, petAge, ownerName, ownerPhone, userMail, ownerAddress, urlOwner, urlPet);
+    private void updateUser (User pet, String petName, String petType, int petAge, String petInfo, String ownerName, String ownerPhone, String userMail, String ownerAddress, String urlOwner, String urlPet){
+        Model.instance.UpdateUser(pet, petName, petType, petAge, petInfo, ownerName, ownerPhone, userMail, ownerAddress, urlOwner, urlPet);
         PetListFragment petList = PetListFragment.newInstance();
         FragmentTransaction tran = getFragmentManager().beginTransaction();
         tran.replace(R.id.main_container, petList);

@@ -80,13 +80,16 @@ public class UserPageFragment extends Fragment {
                 TextView address = (TextView) contentView.findViewById(R.id.userAddress_view);
                 TextView phone = (TextView) contentView.findViewById(R.id.userPhone_view);
                 TextView mail = (TextView) contentView.findViewById(R.id.userMail_view);
-                final ImageView userPic = (ImageView) contentView.findViewById(R.id.ownerImage_view) ;
+                TextView info = (TextView) contentView.findViewById(R.id.free_view);
+
+        final ImageView userPic = (ImageView) contentView.findViewById(R.id.ownerImage_view) ;
                 final ImageView petPic = (ImageView) contentView.findViewById(R.id.petImage_view) ;
 
 
                 name.setText(pet.getPetName());
                 type.setText("Type: " + pet.getPetType());
                 age.setText ("Age: " + pet.getPetAge());
+                info.setText("About me ... " +pet.getInfo() );
                 userName.setText(pet.getUserName());
                 address.setText(pet.getUserAddress());
                 phone.setText(pet.getUserPhone());

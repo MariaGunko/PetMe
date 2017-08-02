@@ -62,6 +62,7 @@ public class PetDetailsFragment extends Fragment {
                 final EditText petName = (EditText) contentView.findViewById(R.id.pet_name);
                 final EditText petType = (EditText) contentView.findViewById(R.id.pet_type);
                 final EditText petAge = (EditText) contentView.findViewById(R.id.pet_age);
+                final EditText petInfo = (EditText) contentView.findViewById(R.id.extra_info_details);
                 final EditText ownerName = (EditText) contentView.findViewById(R.id.owner_name);
                 final EditText ownerPhone = (EditText) contentView.findViewById(R.id.owner_phone);
                 final EditText ownerAddress = (EditText) contentView.findViewById(R.id.owner_address);
@@ -95,6 +96,8 @@ public class PetDetailsFragment extends Fragment {
 
                 if (ownerPhone.getText().toString().trim().equals(""))
                     ownerPhone.setText(null);
+                if (petInfo.getText().toString().trim().equals(""))
+                    petInfo.setText(null);
 
                 if (error==false){
                     savingProfile.setVisibility(View.VISIBLE);
@@ -108,7 +111,7 @@ public class PetDetailsFragment extends Fragment {
                                         @Override
                                         public void complete(String urlPet) {
                                             Log.d("TAG", "Pet image saved");
-                                            createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), urlOwner, urlPet);
+                                            createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), petInfo.getText().toString() ,ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), urlOwner, urlPet);
                                         }
 
                                         @Override
@@ -118,7 +121,7 @@ public class PetDetailsFragment extends Fragment {
                                     });
                                 }
                                 else{
-                                    createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), urlOwner, null);
+                                    createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()),  petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), urlOwner, null);
                                 }
                             }
                             @Override
@@ -134,7 +137,7 @@ public class PetDetailsFragment extends Fragment {
                                 @Override
                                 public void complete(String urlPet) {
                                     Log.d("TAG", "Pet image saved");
-                                    createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), null, urlPet);
+                                    createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()),  petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), null, urlPet);
                                 }
 
                                 @Override
@@ -144,7 +147,7 @@ public class PetDetailsFragment extends Fragment {
                             });
                         }
                         else {
-                            createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), null, null);
+                            createNewUser(petName.getText().toString(), petType.getText().toString(), Integer.parseInt(petAge.getText().toString()),  petInfo.getText().toString(), ownerName.getText().toString(), ownerPhone.getText().toString(), currentUserMail, ownerAddress.getText().toString(), null, null);
                         }
                     }
                 }
@@ -174,8 +177,8 @@ public class PetDetailsFragment extends Fragment {
 
     }
 
-    private void createNewUser (String petName, String petType, int petAge, String ownerName, String ownerPhone, String userMail, String ownerAddress, String urlOwner, String urlPet){
-        Model.instance.CreateUser(usersCounter, petName, petType, petAge, ownerName, ownerPhone, userMail, ownerAddress, urlOwner, urlPet);
+    private void createNewUser (String petName, String petType, int petAge, String petInfo ,String ownerName, String ownerPhone, String userMail, String ownerAddress, String urlOwner, String urlPet){
+        Model.instance.CreateUser(usersCounter, petName, petType, petAge, petInfo, ownerName, ownerPhone, userMail, ownerAddress, urlOwner, urlPet);
         PetListFragment petList = PetListFragment.newInstance();
         FragmentTransaction tran = getFragmentManager().beginTransaction();
         tran.replace(R.id.main_container, petList);

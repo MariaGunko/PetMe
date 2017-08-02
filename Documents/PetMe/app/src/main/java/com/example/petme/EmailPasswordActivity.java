@@ -16,6 +16,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import static android.content.ContentValues.TAG;
 
 public class EmailPasswordActivity extends Activity implements View.OnClickListener{
@@ -49,12 +53,16 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
         super.onStart();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        Log.d("TAG", pref.getString("mail", null));
-        Log.d("TAG", pref.getString("pws", null));
-        if ((!pref.getString("mail", null).equals("null"))&&(!pref.getString("pws", null).equals("null"))){
-            FirebaseUser user = mAuth.getCurrentUser();
-            Log.d("TAG", "User is signed in");
-            updateUI(user);
+        if ((pref.getString("mail", null)==null)&&(pref.getString("pws", null)==null)){ // first entrenace
+        }
+        else
+        {
+            if ((!pref.getString("mail", null).equals("null"))&&(!pref.getString("pws", null).equals("null"))) // current logged in
+            {
+                FirebaseUser user = mAuth.getCurrentUser();
+                Log.d("TAG", "User is signed in");
+                updateUI(user);
+            }
         }
     }
 
@@ -67,8 +75,10 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "createUserWithEmail:success");
                 FirebaseUser user = mAuth.getCurrentUser();
+                Date date = new Date();
                 editor.putString("mail", email);
                 editor.putString("pws", password);
+                //editor.putString("date", date.toString());
                 editor.commit();
                 Toast.makeText(EmailPasswordActivity.this, "Registration Success",
                         Toast.LENGTH_SHORT).show();
@@ -94,11 +104,14 @@ public class EmailPasswordActivity extends Activity implements View.OnClickListe
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            //Date date = new Date ();
                             editor.putString("mail", email);
                             editor.putString("pws", password);
+                            editor.commit();
+                            //editor.putString("date", date.toString());
                             Log.d("TAG", pref.getString("mail", null));
                             Log.d("TAG", pref.getString("pws", null));
-                            editor.commit();
+                            //Log.d("TAG", date.toString());
                             Toast.makeText(EmailPasswordActivity.this, "Login Success",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(user);

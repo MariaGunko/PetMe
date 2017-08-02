@@ -11,6 +11,7 @@ public class User {
     private String petName;
     private String petType;
     private int petAge;
+    private String info;
 
     // owners details
     private String userName;
@@ -99,5 +100,13 @@ public class User {
 
     public void setImagePetUrl(String imagePetUrl) {
         this.imagePetUrl = imagePetUrl;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 }

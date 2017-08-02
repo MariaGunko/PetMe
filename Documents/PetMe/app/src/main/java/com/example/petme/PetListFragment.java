@@ -97,8 +97,8 @@ public class PetListFragment extends Fragment {
                 @Override
                 public void onComplete(List<User> petsList) {
                     data = petsList;
-//                    for (int j=0;j<data.size();j++)
-//                        Model.instance.deleteUser(String.valueOf(j));
+                    for (int j=0;j<data.size();j++)
+                        Model.instance.deleteUser(j+"");
                     for (int i=0;i<data.size();i++)
                         Model.instance.addToSQL(data.get(i));
                     adapter.notifyDataSetChanged();

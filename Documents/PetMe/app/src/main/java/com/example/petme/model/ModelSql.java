@@ -28,6 +28,7 @@ public class ModelSql {
     static final String USER_MAIL = "userMail";
     static final String PET_IMAGE = "imagePetUrl";
     static final String USER_IMAGE = "imageUserUrl";
+    static final String PET_INFO = "petInfo";
 
     ModelSql(Context context){
         helper = new Helper(context);
@@ -35,17 +36,17 @@ public class ModelSql {
 
     class Helper extends SQLiteOpenHelper { // DB Version manager
         public Helper(Context context) {
-            super(context, "database.db", null, 1);
+            super(context, "database.db", null, 4);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("create table " + PET_TABLE + " ("+PET_ID+" TEXT PRIMARY KEY, "+PET_NAME+" TEXT, "+PET_TYPE+" TEXT, "+PET_AGE+" NUMBER, "+USER_NAME+" TEXT, "+USER_PHONE+" TEXT, "+USER_MAIL+" TEXT, "+USER_ADDRESS+" TEXT, "+PET_IMAGE+" TEXT, "+USER_IMAGE+" TEXT);");
+            db.execSQL("create table " + PET_TABLE + " ("+PET_ID+" TEXT PRIMARY KEY, "+PET_NAME+" TEXT, "+PET_TYPE+" TEXT, "+PET_AGE+" NUMBER, "+PET_INFO+" TEXT, "+USER_NAME+" TEXT, "+USER_PHONE+" TEXT, "+USER_MAIL+" TEXT, "+USER_ADDRESS+" TEXT, "+PET_IMAGE+" TEXT, "+USER_IMAGE+" TEXT);");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("drop "+PET_TABLE+";");
+            db.execSQL("DROP TABLE IF EXISTS " + PET_TABLE );
             onCreate(db);
         }
     }
@@ -58,6 +59,7 @@ public class ModelSql {
         values.put (PET_NAME, pet.getPetName());
         values.put (PET_TYPE, pet.getPetType());
         values.put (PET_AGE, pet.getPetAge());
+        values.put (PET_INFO,pet.getInfo());
         values.put (USER_NAME, pet.getUserName());
         values.put (USER_ADDRESS, pet.getUserAddress());
         values.put (USER_MAIL, pet.getUserMail());
@@ -78,6 +80,7 @@ public class ModelSql {
             int petNameIndex = cursor.getColumnIndex(PET_NAME);
             int petTypeIndex = cursor.getColumnIndex(PET_TYPE);
             int petAgeIndex = cursor.getColumnIndex(PET_AGE);
+            int petInfoIndex = cursor.getColumnIndex(PET_INFO);
             int userNameIndex = cursor.getColumnIndex(USER_NAME);
             int userAddressIndex = cursor.getColumnIndex(USER_ADDRESS);
             int userPhoneIndex = cursor.getColumnIndex(USER_PHONE);
@@ -91,6 +94,7 @@ public class ModelSql {
                 pet.setPetName(cursor.getString(petNameIndex));
                 pet.setPetType(cursor.getString(petTypeIndex));
                 pet.setPetAge(cursor.getInt(petAgeIndex));
+                pet.setInfo(cursor.getString(petInfoIndex));
                 pet.setUserName(cursor.getString(userNameIndex));
                 pet.setUserAddress(cursor.getString(userAddressIndex));
                 pet.setUserPhone(cursor.getString(userPhoneIndex));
@@ -110,6 +114,7 @@ public class ModelSql {
         values.put (PET_NAME, pet.getPetName());
         values.put (PET_TYPE, pet.getPetType());
         values.put (PET_AGE, pet.getPetAge());
+        values.put (PET_INFO, pet.getInfo());
         values.put (USER_NAME, pet.getUserName());
         values.put (USER_ADDRESS, pet.getUserAddress());
         values.put (USER_MAIL, pet.getUserMail());
@@ -131,6 +136,7 @@ public class ModelSql {
         pet.setPetName(cursor.getString(cursor.getColumnIndex(PET_NAME)));
         pet.setPetType(cursor.getString(cursor.getColumnIndex(PET_TYPE)));
         pet.setPetAge(cursor.getInt(cursor.getColumnIndex(PET_AGE)));
+        pet.setInfo(cursor.getString(cursor.getColumnIndex(PET_INFO)));
         pet.setUserName(cursor.getString(cursor.getColumnIndex(USER_NAME)));
         pet.setUserAddress(cursor.getString(cursor.getColumnIndex(USER_ADDRESS)));
         pet.setUserPhone(cursor.getString(cursor.getColumnIndex(USER_PHONE)));
