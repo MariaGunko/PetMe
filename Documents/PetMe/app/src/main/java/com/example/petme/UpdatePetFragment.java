@@ -298,20 +298,24 @@ public class UpdatePetFragment extends Fragment {
         });
 
         userImageView = (ImageView) contentView.findViewById(R.id.update_owner_image);
-        userImageView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                dispatchTakePictureIntent();
-            }
-        });
+        if (ImageForUser==null) {
+            userImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchTakePictureIntent();
+                }
+            });
+        }
 
         petImageView = (ImageView) contentView.findViewById(R.id.update_pet_image);
-        petImageView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                dispatchTakePictureIntent2();
-            }
-        });
+        if (ImageForPet==null) {
+            petImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchTakePictureIntent2();
+                }
+            });
+        }
 
         return contentView;
     }
