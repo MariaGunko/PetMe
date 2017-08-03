@@ -1,7 +1,5 @@
 package com.example.petme.model;
 
-import com.example.petme.MyApplication;
-
 import java.util.LinkedList;
 import java.util.List;
 
